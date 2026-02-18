@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Помощник учителю</string>
+    <string name="add_class">Добавить класс</string>
+    <string name="add_student">Добавить ученика</string>
+    <string name="export_excel">Экспорт в Excel</string>
+    <string name="class_notes">Заметки класса</string>
+    <string name="student_notes">Заметки ученика</string>
+    <string name="average_grade">Средний балл</string>
+    <string name="no_grades">Оценки отсутствуют</string>
+    <string name="no_notes">Заметки отсутствуют</string>
+</resources>

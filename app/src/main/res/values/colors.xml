@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Основные цвета темы -->
+    <color name="colorPrimary">#2196F3</color>
+    <color name="colorPrimaryDark">#1976D2</color>
+    <color name="colorAccent">#FF4081</color>
+
+    <!-- Цвета для меток -->
+    <color name="color_red">#F44336</color>
+    <color name="color_green">#4CAF50</color>
+    <color name="color_blue">#2196F3</color>
+    <color name="color_yellow">#FFEB3B</color>
+    <color name="color_orange">#FF9800</color>
+    <color name="color_purple">#9C27B0</color>
+
+    <!-- Базовые цвета -->
+    <color name="white">#FFFFFFFF</color>
+    <color name="black">#FF000000</color>
+    <color name="gray">#FF808080</color>
+    <color name="light_gray">#FFD3D3D3</color>
+    <color name="dark_gray">#FFA9A9A9</color>
+
+    <!-- Дополнительные цвета -->
+    <color name="background">#FFF5F5F5</color>
+    <color name="text_primary">#DE000000</color>
+    <color name="text_secondary">#8A000000</color>
+</resources>
