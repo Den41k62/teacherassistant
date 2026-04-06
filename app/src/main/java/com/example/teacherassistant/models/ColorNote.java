@@ -1,8 +1,8 @@
 package com.example.teacherassistant.models;
 
 public class ColorNote {
-    private int colorCode;
-    private String label;
+    private int colorCode; // Цвет
+    private String label; // Название
 
     public ColorNote(int colorCode, String label) {
         this.colorCode = colorCode;

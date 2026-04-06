@@ -16,7 +16,7 @@ public class ClassAdapter extends RecyclerView.Adapter<ClassAdapter.ClassViewHol
     private List<SchoolClass> classes;
     private OnClassClickListener listener;
 
-    public interface OnClassClickListener {
+    public interface OnClassClickListener { // Интерфейс кликов
         void onClassClick(SchoolClass schoolClass);
         void onClassLongClick(SchoolClass schoolClass);
     }
@@ -43,7 +43,7 @@ public class ClassAdapter extends RecyclerView.Adapter<ClassAdapter.ClassViewHol
         int studentCount = schoolClass.getStudents() != null ? schoolClass.getStudents().size() : 0;
         holder.studentCount.setText("Учеников: " + studentCount);
 
-        if (schoolClass.getNotes() != null && !schoolClass.getNotes().isEmpty()) {
+        if (schoolClass.getNotes() != null && !schoolClass.getNotes().isEmpty()) { // Показать заметку
             String notes = schoolClass.getNotes();
             if (notes.length() > 50) {
                 notes = notes.substring(0, 47) + "...";
@@ -54,11 +54,11 @@ public class ClassAdapter extends RecyclerView.Adapter<ClassAdapter.ClassViewHol
             holder.classNotesPreview.setVisibility(View.GONE);
         }
 
-        holder.itemView.setOnClickListener(v -> {
+        holder.itemView.setOnClickListener(v -> { // Клик
             if (listener != null) listener.onClassClick(schoolClass);
         });
 
-        holder.itemView.setOnLongClickListener(v -> {
+        holder.itemView.setOnLongClickListener(v -> { // Долгий клик
             if (listener != null) {
                 listener.onClassLongClick(schoolClass);
                 return true;
@@ -72,7 +72,7 @@ public class ClassAdapter extends RecyclerView.Adapter<ClassAdapter.ClassViewHol
         return classes == null ? 0 : classes.size();
     }
 
-    public void updateClasses(List<SchoolClass> newClasses) {
+    public void updateClasses(List<SchoolClass> newClasses) { // Обновить список
         if (classes != null) {
             classes.clear();
             if (newClasses != null) {

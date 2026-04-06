@@ -4,28 +4,32 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Student {
-    private int id;
-    private int classId;
-    private String fullName;
-    private String notes;
-    private int colorCode;
-    private String colorLabel;
-    private List<Grade> grades;
-    public void updateStudentData(String notes, int colorCode, String colorLabel) {
+    private int id; // ID
+    private int classId; // ID класса
+    private String fullName; // ФИО
+    private String notes; // Заметки
+    private int colorCode; // Цвет
+    private String colorLabel; // Название цвета
+    private List<Grade> grades; // Оценки
+
+    public void updateStudentData(String notes, int colorCode, String colorLabel) { // Обновить данные
         this.notes = notes;
         this.colorCode = colorCode;
         this.colorLabel = colorLabel;
     }
+
     public Student() {
         grades = new ArrayList<>();
     }
-    public void updateFrom(Student other) {
+
+    public void updateFrom(Student other) { // Копировать
         this.fullName = other.fullName;
         this.notes = other.notes;
         this.colorCode = other.colorCode;
         this.colorLabel = other.colorLabel;
         this.grades = other.grades;
     }
+
     public Student(String fullName, int classId) {
         this.fullName = fullName;
         this.classId = classId;
@@ -53,13 +57,13 @@ public class Student {
     public List<Grade> getGrades() { return grades; }
     public void setGrades(List<Grade> grades) { this.grades = grades; }
 
-    public double getAverageGrade() {
+    public double getAverageGrade() { // Средний балл
         if (grades.isEmpty()) return 0;
         double sum = 0;
         int count = 0;
 
         for (Grade grade : grades) {
-            if (grade.getValue() > 0) { // Игнорируем оценки "Н" (значение 0)
+            if (grade.getValue() > 0) {
                 sum += grade.getValue();
                 count++;
             }

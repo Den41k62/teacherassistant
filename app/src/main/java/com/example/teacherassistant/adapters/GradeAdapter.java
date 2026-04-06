@@ -19,7 +19,7 @@ public class GradeAdapter extends RecyclerView.Adapter<GradeAdapter.GradeViewHol
     private OnGradeClickListener listener;
     private SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
 
-    public interface OnGradeClickListener {
+    public interface OnGradeClickListener { // Интерфейс кликов
         void onGradeLongClick(Grade grade);
     }
 
@@ -44,8 +44,7 @@ public class GradeAdapter extends RecyclerView.Adapter<GradeAdapter.GradeViewHol
     public void onBindViewHolder(@NonNull GradeViewHolder holder, int position) {
         Grade grade = grades.get(position);
 
-        // Отображаем "Н" для значения 0
-        if (grade.getValue() == 0) {
+        if (grade.getValue() == 0) { // Отобразить "Н"
             holder.tvGradeValue.setText("Н");
         } else {
             holder.tvGradeValue.setText(String.valueOf(grade.getValue()));
@@ -54,8 +53,7 @@ public class GradeAdapter extends RecyclerView.Adapter<GradeAdapter.GradeViewHol
         holder.tvGradeSubject.setText(grade.getSubject());
         holder.tvGradeDate.setText(dateFormat.format(grade.getDate()));
 
-        // Добавляем обработку долгого нажатия
-        if (listener != null) {
+        if (listener != null) { // Долгий клик
             holder.itemView.setOnLongClickListener(v -> {
                 listener.onGradeLongClick(grade);
                 return true;
@@ -68,7 +66,7 @@ public class GradeAdapter extends RecyclerView.Adapter<GradeAdapter.GradeViewHol
         return grades.size();
     }
 
-    public void updateGrades(List<Grade> newGrades) {
+    public void updateGrades(List<Grade> newGrades) { // Обновить список
         grades = newGrades;
         notifyDataSetChanged();
     }
@@ -85,5 +83,4 @@ public class GradeAdapter extends RecyclerView.Adapter<GradeAdapter.GradeViewHol
             tvGradeDate = itemView.findViewById(R.id.tvGradeDate);
         }
     }
-
 }

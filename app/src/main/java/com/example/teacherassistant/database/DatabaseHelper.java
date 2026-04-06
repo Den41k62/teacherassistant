@@ -37,7 +37,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static DatabaseHelper instance;
     private SQLiteDatabase database;
 
-    public static synchronized DatabaseHelper getInstance(Context context) {
+    public static synchronized DatabaseHelper getInstance(Context context) { // Синглтон
         if (instance == null) {
             instance = new DatabaseHelper(context.getApplicationContext());
         }
@@ -49,7 +49,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     @Override
-    public void onCreate(SQLiteDatabase db) {
+    public void onCreate(SQLiteDatabase db) { // Создать таблицы
         String createClassTable = "CREATE TABLE " + TABLE_CLASSES + "(" +
                 COLUMN_CLASS_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                 COLUMN_CLASS_NAME + " TEXT," +
@@ -77,25 +77,25 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) { // Обновить БД
         if (oldVersion < 2) {
         }
     }
 
-    public synchronized SQLiteDatabase openDatabase() {
+    public synchronized SQLiteDatabase openDatabase() { // Открыть БД
         if (database == null || !database.isOpen()) {
             database = this.getWritableDatabase();
         }
         return database;
     }
 
-    public synchronized void closeDatabase() {
+    public synchronized void closeDatabase() { // Закрыть БД
         if (database != null && database.isOpen()) {
             database.close();
         }
     }
 
-    public long addClass(SchoolClass schoolClass) {
+    public long addClass(SchoolClass schoolClass) { // Добавить класс
         SQLiteDatabase db = openDatabase();
         ContentValues values = new ContentValues();
         values.put(COLUMN_CLASS_NAME, schoolClass.getClassName());
@@ -106,7 +106,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return result;
     }
 
-    public List<SchoolClass> getAllClasses() {
+    public List<SchoolClass> getAllClasses() { // Получить все классы
         List<SchoolClass> classes = new ArrayList<>();
         SQLiteDatabase db = openDatabase();
         Cursor cursor = null;
@@ -132,7 +132,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return classes;
     }
 
-    public void updateClass(SchoolClass schoolClass) {
+    public void updateClass(SchoolClass schoolClass) { // Обновить класс
         SQLiteDatabase db = openDatabase();
         ContentValues values = new ContentValues();
         values.put(COLUMN_CLASS_NAME, schoolClass.getClassName());
@@ -143,7 +143,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 new String[]{String.valueOf(schoolClass.getId())});
     }
 
-    public void deleteClass(int classId) {
+    public void deleteClass(int classId) { // Удалить класс
         SQLiteDatabase db = openDatabase();
 
         List<Student> students = getStudentsByClass(classId);
@@ -155,7 +155,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 new String[]{String.valueOf(classId)});
     }
 
-    public long addStudent(Student student) {
+    public long addStudent(Student student) { // Добавить ученика
         SQLiteDatabase db = openDatabase();
         ContentValues values = new ContentValues();
         values.put(COLUMN_CLASS_ID, student.getClassId());
@@ -168,7 +168,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return result;
     }
 
-    public List<Student> getStudentsByClass(int classId) {
+    public List<Student> getStudentsByClass(int classId) { // Ученики класса
         List<Student> students = new ArrayList<>();
         SQLiteDatabase db = openDatabase();
         Cursor cursor = null;
@@ -202,7 +202,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return students;
     }
 
-    public void updateStudent(Student student) {
+    public void updateStudent(Student student) { // Обновить ученика
         SQLiteDatabase db = openDatabase();
         ContentValues values = new ContentValues();
         values.put(COLUMN_FULL_NAME, student.getFullName());
@@ -214,7 +214,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 new String[]{String.valueOf(student.getId())});
     }
 
-    public void deleteStudent(int studentId) {
+    public void deleteStudent(int studentId) { // Удалить ученика
         SQLiteDatabase db = openDatabase();
 
         db.delete(TABLE_GRADES, COLUMN_STUDENT_ID + " = ?",
@@ -224,7 +224,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 new String[]{String.valueOf(studentId)});
     }
 
-    public long addGrade(Grade grade) {
+    public long addGrade(Grade grade) { // Добавить оценку
         SQLiteDatabase db = openDatabase();
         ContentValues values = new ContentValues();
         values.put(COLUMN_STUDENT_ID, grade.getStudentId());
@@ -236,7 +236,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return result;
     }
 
-    public List<Grade> getGradesByStudent(int studentId) {
+    public List<Grade> getGradesByStudent(int studentId) { // Оценки ученика
         List<Grade> grades = new ArrayList<>();
         SQLiteDatabase db = openDatabase();
         Cursor cursor = null;
@@ -267,19 +267,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return grades;
     }
 
-    public void deleteGrade(int gradeId) {
+    public void deleteGrade(int gradeId) { // Удалить оценку
         SQLiteDatabase db = openDatabase();
         db.delete(TABLE_GRADES, COLUMN_GRADE_ID + " = ?",
                 new String[]{String.valueOf(gradeId)});
     }
 
-    public void deleteAllGradesForStudent(int studentId) {
+    public void deleteAllGradesForStudent(int studentId) { // Удалить все оценки
         SQLiteDatabase db = openDatabase();
         db.delete(TABLE_GRADES, COLUMN_STUDENT_ID + " = ?",
                 new String[]{String.valueOf(studentId)});
     }
 
-    public Grade getGradeById(int gradeId) {
+    public Grade getGradeById(int gradeId) { // Получить оценку по ID
         SQLiteDatabase db = openDatabase();
         Cursor cursor = null;
         Grade grade = null;
@@ -306,7 +306,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return grade;
     }
 
-    public SchoolClass getClassById(int classId) {
+    public SchoolClass getClassById(int classId) { // Получить класс по ID
         SQLiteDatabase db = openDatabase();
         Cursor cursor = null;
         SchoolClass schoolClass = null;
@@ -332,7 +332,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return schoolClass;
     }
 
-    public Student getStudentById(int studentId) {
+    public Student getStudentById(int studentId) { // Получить ученика по ID
         SQLiteDatabase db = openDatabase();
         Cursor cursor = null;
         Student student = null;

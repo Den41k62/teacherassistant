@@ -29,26 +29,22 @@ public class MainActivity extends AppCompatActivity implements ClassAdapter.OnCl
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Настройка Toolbar
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        // Устанавливаем заголовок приложения
         if (getSupportActionBar() != null) {
             getSupportActionBar().setTitle("Помощник учителя");
         }
 
-        // Используем синглтон
         databaseHelper = DatabaseHelper.getInstance(this);
 
         classesRecyclerView = findViewById(R.id.classesRecyclerView);
         classesRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        // Инициализируем адаптер с пустым списком
         classAdapter = new ClassAdapter(classes, this);
         classesRecyclerView.setAdapter(classAdapter);
 
-        loadClasses();
+        loadClasses(); // Загрузить классы
 
         findViewById(R.id.fabAddClass).setOnClickListener(v -> showAddClassDialog());
     }
@@ -56,18 +52,16 @@ public class MainActivity extends AppCompatActivity implements ClassAdapter.OnCl
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        // Закрываем базу данных только при уничтожении активности
-        databaseHelper.closeDatabase();
+        databaseHelper.closeDatabase(); // Закрыть БД
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        // Обновляем данные при возвращении на экран
-        loadClasses();
+        loadClasses(); // Обновить при возврате
     }
 
-    private void loadClasses() {
+    private void loadClasses() { // Загрузить классы из БД
         new Thread(() -> {
             List<SchoolClass> newClasses = databaseHelper.getAllClasses();
             for (SchoolClass schoolClass : newClasses) {
@@ -82,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements ClassAdapter.OnCl
         }).start();
     }
 
-    private void showAddClassDialog() {
+    private void showAddClassDialog() { // Диалог добавления класса
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Добавить класс");
 
@@ -108,12 +102,12 @@ public class MainActivity extends AppCompatActivity implements ClassAdapter.OnCl
     }
 
     @Override
-    public void onClassClick(SchoolClass schoolClass) {
+    public void onClassClick(SchoolClass schoolClass) { // Клик по классу
         ClassActivity.start(this, schoolClass.getId());
     }
 
     @Override
-    public void onClassLongClick(SchoolClass schoolClass) {
+    public void onClassLongClick(SchoolClass schoolClass) { // Долгий клик - удалить
         new AlertDialog.Builder(this)
                 .setTitle("Удалить класс")
                 .setMessage("Вы уверены, что хотите удалить класс " + schoolClass.getClassName() + "?")

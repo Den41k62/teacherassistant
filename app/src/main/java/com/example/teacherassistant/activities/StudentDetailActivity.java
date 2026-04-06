@@ -32,7 +32,7 @@ public class StudentDetailActivity extends AppCompatActivity implements GradeAda
     private GradeAdapter gradeAdapter;
     private SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
 
-    public static void start(AppCompatActivity activity, int studentId) {
+    public static void start(AppCompatActivity activity, int studentId) { // Запуск активности
         android.content.Intent intent = new android.content.Intent(activity, StudentDetailActivity.class);
         intent.putExtra("studentId", studentId);
         activity.startActivity(intent);
@@ -44,25 +44,22 @@ public class StudentDetailActivity extends AppCompatActivity implements GradeAda
         setContentView(R.layout.activity_student_detail);
 
         int studentId = getIntent().getIntExtra("studentId", -1);
-        // Используем синглтон вместо прямого вызова конструктора
         databaseHelper = DatabaseHelper.getInstance(this);
 
-        initViews();
+        initViews(); // Инициализация View
 
-        // Загружаем данные в фоновом потоке
-        new Thread(() -> loadStudentData(studentId)).start();
+        new Thread(() -> loadStudentData(studentId)).start(); // Загрузить данные
 
-        setupClickListeners();
+        setupClickListeners(); // Настроить клики
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        // Закрываем базу данных при уничтожении активности
-        databaseHelper.closeDatabase();
+        databaseHelper.closeDatabase(); // Закрыть БД
     }
 
-    private void initViews() {
+    private void initViews() { // Инициализация
         tvStudentName = findViewById(R.id.tvStudentName);
         tvAverageGrade = findViewById(R.id.tvAverageGrade);
         tvColorLabel = findViewById(R.id.tvColorLabel);
@@ -75,11 +72,9 @@ public class StudentDetailActivity extends AppCompatActivity implements GradeAda
         gradesRecyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 
-    private void loadStudentData(int studentId) {
-        // Используем метод getStudentById из DatabaseHelper
+    private void loadStudentData(int studentId) { // Загрузить ученика
         currentStudent = databaseHelper.getStudentById(studentId);
 
-        // Обновляем UI в основном потоке
         runOnUiThread(() -> {
             if (currentStudent == null) {
                 finish();
@@ -87,11 +82,11 @@ public class StudentDetailActivity extends AppCompatActivity implements GradeAda
             }
 
             setTitle(currentStudent.getFullName());
-            updateUI();
+            updateUI(); // Обновить UI
         });
     }
 
-    private void updateUI() {
+    private void updateUI() { // Обновить интерфейс
         if (currentStudent == null) return;
 
         tvStudentName.setText(currentStudent.getFullName());
@@ -110,7 +105,6 @@ public class StudentDetailActivity extends AppCompatActivity implements GradeAda
             tvStudentNotes.setText(currentStudent.getNotes());
         }
 
-        // Загружаем оценки
         grades = databaseHelper.getGradesByStudent(currentStudent.getId());
         if (grades.isEmpty()) {
             tvNoGrades.setVisibility(View.VISIBLE);
@@ -118,36 +112,31 @@ public class StudentDetailActivity extends AppCompatActivity implements GradeAda
         } else {
             tvNoGrades.setVisibility(View.GONE);
             gradesRecyclerView.setVisibility(View.VISIBLE);
-            // Передаем this как слушатель
             gradeAdapter = new GradeAdapter(grades, this);
             gradesRecyclerView.setAdapter(gradeAdapter);
         }
     }
 
-    private void setupClickListeners() {
+    private void setupClickListeners() { // Настроить кнопки
         btnAddGrade.setOnClickListener(v -> showAddGradeDialog());
     }
 
-    private void showAddGradeDialog() {
+    private void showAddGradeDialog() { // Диалог добавления оценки
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Поставить оценку");
 
-        // Добавляем "Н" в список оценок
         String[] grades = {"1", "2", "3", "4", "5", "Н"};
         builder.setItems(grades, (dialog, which) -> {
             int gradeValue;
-            if (which == 5) { // "Н" - это 6-й элемент
+            if (which == 5) {
                 gradeValue = 0;
             } else {
                 gradeValue = which + 1;
             }
 
-            // Определяем предмет из информации об ученике
             String subject = "Предмет";
-            // Получаем класс ученика
             currentStudent = databaseHelper.getStudentById(currentStudent.getId());
             if (currentStudent != null) {
-                // Получаем информацию о классе
                 List<com.example.teacherassistant.models.SchoolClass> classes = databaseHelper.getAllClasses();
                 for (com.example.teacherassistant.models.SchoolClass schoolClass : classes) {
                     List<Student> students = databaseHelper.getStudentsByClass(schoolClass.getId());
@@ -162,16 +151,14 @@ public class StudentDetailActivity extends AppCompatActivity implements GradeAda
 
             Grade grade = new Grade(currentStudent.getId(), gradeValue, subject);
             databaseHelper.addGrade(grade);
-            // Обновляем UI
             updateUI();
         });
         builder.setNegativeButton("Отмена", null);
         builder.show();
     }
 
-    // Реализация интерфейса для удаления оценок
     @Override
-    public void onGradeLongClick(Grade grade) {
+    public void onGradeLongClick(Grade grade) { // Долгий клик - удалить оценку
         new AlertDialog.Builder(this)
                 .setTitle("Удалить оценку")
                 .setMessage("Вы уверены, что хотите удалить оценку \"" +
@@ -179,10 +166,8 @@ public class StudentDetailActivity extends AppCompatActivity implements GradeAda
                         "\" по предмету \"" + grade.getSubject() + "\" от " +
                         dateFormat.format(grade.getDate()) + "?")
                 .setPositiveButton("Удалить", (dialog, which) -> {
-                    // Удаление в фоновом потоке
                     new Thread(() -> {
                         databaseHelper.deleteGrade(grade.getId());
-                        // Обновляем UI в основном потоке
                         runOnUiThread(this::updateUI);
                     }).start();
                 })

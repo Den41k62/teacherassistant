@@ -3,11 +3,11 @@ package com.example.teacherassistant.models;
 import java.util.Date;
 
 public class Grade {
-    private int id;
-    private int studentId;
-    private int value;
-    private Date date;
-    private String subject;
+    private int id; // ID
+    private int studentId; // ID ученика
+    private int value; // Оценка
+    private Date date; // Дата
+    private String subject; // Предмет
 
     public Grade() {}
 

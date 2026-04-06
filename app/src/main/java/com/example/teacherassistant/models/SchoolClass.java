@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SchoolClass {
-    private int id;
-    private String className;
-    private String subject;
-    private String notes;
-    private List<Student> students;
+    private int id; // ID
+    private String className; // Название
+    private String subject; // Предмет
+    private String notes; // Заметки
+    private List<Student> students; // Ученики
 
     public SchoolClass() {
         students = new ArrayList<>();

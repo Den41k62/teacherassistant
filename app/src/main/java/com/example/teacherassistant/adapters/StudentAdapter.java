@@ -19,7 +19,7 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.StudentV
     private List<Student> students;
     private OnStudentClickListener listener;
 
-    public interface OnStudentClickListener {
+    public interface OnStudentClickListener { // Интерфейс кликов
         void onStudentClick(Student student);
         void onAddGradeClick(Student student);
         void onChangeColorClick(Student student);
@@ -51,7 +51,7 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.StudentV
 
         holder.studentNumber.setText(String.valueOf(position + 1));
 
-        if (student.getNotes() != null && !student.getNotes().isEmpty()) {
+        if (student.getNotes() != null && !student.getNotes().isEmpty()) { // Показать заметку
             holder.studentNotesPreview.setText(student.getNotes());
             holder.studentNotesPreview.setVisibility(View.VISIBLE);
         } else {
@@ -59,11 +59,16 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.StudentV
         }
 
         List<Grade> grades = student.getGrades();
-        if (grades != null && !grades.isEmpty()) {
+        if (grades != null && !grades.isEmpty()) { // Показать оценки
             StringBuilder gradesText = new StringBuilder("Оценки: ");
             int count = Math.min(grades.size(), 3);
             for (int i = 0; i < count; i++) {
-                gradesText.append(grades.get(i).getValue());
+                int gradeValue = grades.get(i).getValue();
+                if (gradeValue == 0) {
+                    gradesText.append("Н");
+                } else {
+                    gradesText.append(gradeValue);
+                }
                 if (i < count - 1) gradesText.append(", ");
             }
             if (grades.size() > 3) {
@@ -75,14 +80,14 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.StudentV
             holder.gradesPreview.setVisibility(View.GONE);
         }
 
-        if (student.getColorCode() != 0) {
+        if (student.getColorCode() != 0) { // Показать цвет
             holder.colorIndicator.setBackgroundColor(student.getColorCode());
             holder.colorIndicator.setVisibility(View.VISIBLE);
         } else {
             holder.colorIndicator.setVisibility(View.INVISIBLE);
         }
 
-        holder.menuButton.setOnClickListener(v -> {
+        holder.menuButton.setOnClickListener(v -> { // Кнопка меню
             PopupMenu popup = new PopupMenu(v.getContext(), holder.menuButton);
             popup.inflate(R.menu.student_menu);
             popup.setOnMenuItemClickListener(item -> {
@@ -105,37 +110,17 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.StudentV
             popup.show();
         });
 
-        holder.itemView.setOnClickListener(v -> {
+        holder.itemView.setOnClickListener(v -> { // Клик
             if (listener != null) listener.onStudentClick(student);
         });
 
-        holder.itemView.setOnLongClickListener(v -> {
+        holder.itemView.setOnLongClickListener(v -> { // Долгий клик
             if (listener != null) {
                 listener.onStudentLongClick(student);
                 return true;
             }
             return false;
         });
-        if (grades != null && !grades.isEmpty()) {
-            StringBuilder gradesText = new StringBuilder("Оценки: ");
-            int count = Math.min(grades.size(), 3);
-            for (int i = 0; i < count; i++) {
-                int gradeValue = grades.get(i).getValue();
-                if (gradeValue == 0) {
-                    gradesText.append("Н");
-                } else {
-                    gradesText.append(gradeValue);
-                }
-                if (i < count - 1) gradesText.append(", ");
-            }
-            if (grades.size() > 3) {
-                gradesText.append("...");
-            }
-            holder.gradesPreview.setText(gradesText.toString());
-            holder.gradesPreview.setVisibility(View.VISIBLE);
-        } else {
-            holder.gradesPreview.setVisibility(View.GONE);
-        }
     }
 
     @Override
@@ -143,7 +128,7 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.StudentV
         return students == null ? 0 : students.size();
     }
 
-    public void updateStudents(List<Student> newStudents) {
+    public void updateStudents(List<Student> newStudents) { // Обновить список
         if (students != null) {
             students.clear();
             if (newStudents != null) {

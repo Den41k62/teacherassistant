@@ -29,7 +29,7 @@ public class ClassActivity extends AppCompatActivity implements StudentAdapter.O
     private SchoolClass currentClass;
     private List<Student> students = new ArrayList<>();
 
-    public static void start(AppCompatActivity activity, int classId) {
+    public static void start(AppCompatActivity activity, int classId) { // Запуск активности
         Intent intent = new Intent(activity, ClassActivity.class);
         intent.putExtra("classId", classId);
         activity.startActivity(intent);
@@ -67,7 +67,7 @@ public class ClassActivity extends AppCompatActivity implements StudentAdapter.O
                 studentAdapter = new StudentAdapter(students, this);
                 studentsRecyclerView.setAdapter(studentAdapter);
 
-                loadStudents();
+                loadStudents(); // Загрузить учеников
 
                 findViewById(R.id.fabAddStudent).setOnClickListener(v -> showAddStudentDialog());
             });
@@ -77,10 +77,9 @@ public class ClassActivity extends AppCompatActivity implements StudentAdapter.O
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        // Не закрываем здесь, так как используем синглтон
     }
 
-    private void loadStudents() {
+    private void loadStudents() { // Загрузить учеников
         new Thread(() -> {
             if (currentClass != null) {
                 List<Student> newStudents = databaseHelper.getStudentsByClass(currentClass.getId());
@@ -93,7 +92,7 @@ public class ClassActivity extends AppCompatActivity implements StudentAdapter.O
         }).start();
     }
 
-    private void showAddStudentDialog() {
+    private void showAddStudentDialog() { // Диалог добавления ученика
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Добавить ученика");
 
@@ -116,27 +115,27 @@ public class ClassActivity extends AppCompatActivity implements StudentAdapter.O
     }
 
     @Override
-    public void onStudentClick(Student student) {
+    public void onStudentClick(Student student) { // Клик по ученику
         StudentDetailActivity.start(this, student.getId());
     }
 
     @Override
-    public void onAddGradeClick(Student student) {
+    public void onAddGradeClick(Student student) { // Добавить оценку
         showGradeDialog(student);
     }
 
     @Override
-    public void onChangeColorClick(Student student) {
+    public void onChangeColorClick(Student student) { // Сменить цвет
         showColorDialog(student);
     }
 
     @Override
-    public void onAddNoteClick(Student student) {
+    public void onAddNoteClick(Student student) { // Добавить заметку
         showNoteDialog(student);
     }
 
     @Override
-    public void onDeleteGradesClick(Student student) {
+    public void onDeleteGradesClick(Student student) { // Удалить оценки
         new AlertDialog.Builder(this)
                 .setTitle("Удалить все оценки")
                 .setMessage("Удалить все оценки " + student.getFullName() + "?")
@@ -150,7 +149,7 @@ public class ClassActivity extends AppCompatActivity implements StudentAdapter.O
                 .show();
     }
 
-    private void showGradeDialog(Student student) {
+    private void showGradeDialog(Student student) { // Диалог выбора оценки
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Поставить оценку " + student.getFullName());
 
@@ -174,7 +173,7 @@ public class ClassActivity extends AppCompatActivity implements StudentAdapter.O
         builder.show();
     }
 
-    private void showColorDialog(Student student) {
+    private void showColorDialog(Student student) { // Диалог выбора цвета
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Выберите цвет " + student.getFullName());
 
@@ -199,7 +198,7 @@ public class ClassActivity extends AppCompatActivity implements StudentAdapter.O
         builder.show();
     }
 
-    private void showNoteDialog(Student student) {
+    private void showNoteDialog(Student student) { // Диалог заметки
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Заметка " + student.getFullName());
 
@@ -223,13 +222,13 @@ public class ClassActivity extends AppCompatActivity implements StudentAdapter.O
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(Menu menu) { // Создать меню
         getMenuInflater().inflate(R.menu.class_menu, menu);
         return true;
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(MenuItem item) { // Выбор пункта меню
         if (item.getItemId() == R.id.menu_class_notes) {
             showClassNotesDialog();
             return true;
@@ -240,7 +239,7 @@ public class ClassActivity extends AppCompatActivity implements StudentAdapter.O
         return super.onOptionsItemSelected(item);
     }
 
-    private void showClassNotesDialog() {
+    private void showClassNotesDialog() { // Заметки класса
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Заметки класса " + currentClass.getClassName());
 
@@ -265,7 +264,7 @@ public class ClassActivity extends AppCompatActivity implements StudentAdapter.O
         builder.show();
     }
 
-    private void showCopyClassDialog() {
+    private void showCopyClassDialog() { // Копировать класс
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Копировать класс");
 
@@ -283,10 +282,8 @@ public class ClassActivity extends AppCompatActivity implements StudentAdapter.O
         builder.show();
     }
 
-    private void copyClassWithNewSubject(String newSubject) {
+    private void copyClassWithNewSubject(String newSubject) { // Копирование с новым предметом
         SchoolClass newClass = new SchoolClass(currentClass.getClassName(), newSubject);
-        // НЕ копируем заметки класса
-        // newClass.setNotes(currentClass.getNotes()); - УБРАЛИ ЭТУ СТРОКУ
 
         long newClassId = databaseHelper.addClass(newClass);
 
@@ -304,7 +301,7 @@ public class ClassActivity extends AppCompatActivity implements StudentAdapter.O
     }
 
     @Override
-    public void onStudentLongClick(Student student) {
+    public void onStudentLongClick(Student student) { // Долгий клик - удалить
         new AlertDialog.Builder(this)
                 .setTitle("Удалить ученика")
                 .setMessage("Удалить " + student.getFullName() + "?")
