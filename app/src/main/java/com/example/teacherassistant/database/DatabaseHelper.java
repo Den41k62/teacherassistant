@@ -37,7 +37,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static DatabaseHelper instance;
     private SQLiteDatabase database;
 
-    public static synchronized DatabaseHelper getInstance(Context context) { // Синглтон
+    public static synchronized DatabaseHelper getInstance(Context context) { // Одиночная БД
         if (instance == null) {
             instance = new DatabaseHelper(context.getApplicationContext());
         }
@@ -183,12 +183,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             if (cursor != null && cursor.moveToFirst()) {
                 do {
                     Student student = new Student();
-                    student.setId(cursor.getInt(cursor.getColumnIndex(COLUMN_STUDENT_ID)));
-                    student.setClassId(cursor.getInt(cursor.getColumnIndex(COLUMN_CLASS_ID)));
-                    student.setFullName(cursor.getString(cursor.getColumnIndex(COLUMN_FULL_NAME)));
-                    student.setNotes(cursor.getString(cursor.getColumnIndex(COLUMN_STUDENT_NOTES)));
-                    student.setColorCode(cursor.getInt(cursor.getColumnIndex(COLUMN_COLOR_CODE)));
-                    student.setColorLabel(cursor.getString(cursor.getColumnIndex(COLUMN_COLOR_LABEL)));
+                    student.setId(cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_STUDENT_ID)));
+                    student.setClassId(cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_CLASS_ID)));
+                    student.setFullName(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_FULL_NAME)));
+                    student.setNotes(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_STUDENT_NOTES)));
+                    student.setColorCode(cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_COLOR_CODE)));
+                    student.setColorLabel(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_COLOR_LABEL)));
 
                     student.setGrades(getGradesByStudent(student.getId()));
                     students.add(student);
